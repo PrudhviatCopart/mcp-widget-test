@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: mcp-widget-test
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
