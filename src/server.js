@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
@@ -84,7 +85,16 @@ function createServer() {
       }
     },
     async () => ({
-      content: [{ type: "text", text: "Test widget opened." }],
+      content: [
+        {
+          type: "resource",
+          resource: {
+            uri: "ui://test/widget.html",
+            mimeType: "text/html+skybridge",
+            text: WIDGET_HTML
+          }
+        }
+      ],
       structuredContent: { opened: true }
     })
   );
@@ -93,7 +103,10 @@ function createServer() {
 }
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+
+app.options("/mcp", cors());
 
 app.post("/mcp", async (req, res) => {
   try {
