@@ -38,6 +38,15 @@ const WIDGET_HTML = `<!doctype html>
   </head>
   <body>
     <p class="message">This is test app</p>
+    <script>
+      window.addEventListener("load", function () {
+        try {
+          window.parent.postMessage({ type: "uiReady" }, "*");
+          window.parent.postMessage({ type: "skybridge:ready" }, "*");
+          window.parent.postMessage({ type: "loaded" }, "*");
+        } catch (e) {}
+      });
+    </script>
   </body>
 </html>`;
 
@@ -85,16 +94,7 @@ function createServer() {
       }
     },
     async () => ({
-      content: [
-        {
-          type: "resource",
-          resource: {
-            uri: "ui://test/widget.html",
-            mimeType: "text/html+skybridge",
-            text: WIDGET_HTML
-          }
-        }
-      ],
+      content: [{ type: "text", text: "Test widget opened." }],
       structuredContent: { opened: true }
     })
   );
